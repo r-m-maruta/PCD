@@ -2,7 +2,7 @@ package kahoot.io;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import kahoot.questions.QuizFile;
+import kahoot.game.QuizFile;
 
 import java.io.FileReader;
 import java.io.IOException;

@@ -1,26 +1,23 @@
 package kahoot.ui;
 
-import kahoot.game.GameState;
-import kahoot.questions.Question;
-import kahoot.ui.GameUI;
+import kahoot.game.Question;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.List;
 
 public class QuestionPanel extends JPanel {
 
-    private GameState gameState;
     private JLabel questionLabel;
     private JButton[] optionButtons;
     private GameUI parent;
 
-    public QuestionPanel(GameUI parent, GameState gameState) {
+    public QuestionPanel(GameUI parent) {
         this.parent = parent;
-        this.gameState = gameState;
 
         setLayout(new BorderLayout(10, 10));
 
-        questionLabel = new JLabel("", SwingConstants.CENTER);
+        questionLabel = new JLabel("À espera da pergunta...", SwingConstants.CENTER);
         questionLabel.setFont(new Font("SansSerif", Font.BOLD, 16));
         add(questionLabel, BorderLayout.NORTH);
 
@@ -30,34 +27,41 @@ public class QuestionPanel extends JPanel {
         optionButtons = new JButton[4];
         for (int i = 0; i < 4; i++) {
             int index = i;
-            optionButtons[i] = new JButton();
-            optionButtons[i].setFont(new Font("SansSerif", Font.PLAIN, 14));
-            optionButtons[i].addActionListener(e -> handleAnswer(index));
+            optionButtons[i] = new JButton("Opção " + (i + 1));
+            optionButtons[i].addActionListener(e -> {
+                setOptionsEnabled(false);
+                parent.sendAnswer(index);
+            });
+            optionButtons[i].setEnabled(false);
             optionsPanel.add(optionButtons[i]);
         }
-
-        loadQuestion(gameState.getCurrentQuestion());
     }
 
     public void loadQuestion(Question q) {
-        if (q == null) return;
-        questionLabel.setText( q.getQuestion());
+        if (q == null) {
+            questionLabel.setText("Nenhuma pergunta disponível.");
+            setOptionsEnabled(false);
+            return;
+        }
 
-        java.util.List<String> options = q.getOptions();
+        questionLabel.setText(q.getQuestion());
+
+        List<String> opts = q.getOptions();
         for (int i = 0; i < optionButtons.length; i++) {
-            if (i < options.size()) {
-                optionButtons[i].setText(options.get(i));
-                optionButtons[i].setEnabled(true);
+            if (i < opts.size()) {
+                optionButtons[i].setText(opts.get(i));
                 optionButtons[i].setVisible(true);
+                optionButtons[i].setEnabled(true);
             } else {
                 optionButtons[i].setVisible(false);
+                optionButtons[i].setEnabled(false);
             }
         }
+        revalidate();
+        repaint();
     }
 
-    private void handleAnswer(int index) {
-        gameState.awnserQuestion(index);
-        parent.updateScore(gameState.getScore());
-        parent.showNextQuestion();
+    private void setOptionsEnabled(boolean v) {
+        for (JButton b : optionButtons) b.setEnabled(v);
     }
 }
