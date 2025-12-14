@@ -8,10 +8,7 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-/**
- * Cliente: cria ObjectOutputStream -> ObjectInputStream, envia LOGIN (sender=username, target=team),
- * e tem um thread listener que notifica ClientListener.
- */
+
 public class ClientConnection {
 
     private Socket socket;

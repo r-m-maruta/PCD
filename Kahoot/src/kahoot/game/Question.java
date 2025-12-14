@@ -11,7 +11,6 @@ public class Question implements Serializable {
     private int correct;
     private List<String> options;
 
-    // Gson requires a no-arg constructor or uses reflection — fields private are OK.
     public String getQuestion() { return question; }
     public int getPoints(){ return points; }
     public int getCorrect(){ return correct; }

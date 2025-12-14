@@ -7,10 +7,7 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-/**
- * Trata um cliente: cria streams, recebe mensagens (LOGIN, ANSWER), envia respostas.
- * Quando recebe ANSWER coloca-a na GameMaster através de ServerMain.handleAnswer (queue).
- */
+
 public class ClientHandler implements Runnable {
 
     private final Socket socket;
@@ -59,7 +56,7 @@ public class ClientHandler implements Runnable {
                         System.out.println("ClientHandler: LOGIN recebido: " + username + " (team " + team + ")");
                         boolean ok;
                         try {
-                            ok = GameMaster.getInstance().tentarLogin(username, team, this);
+                            ok = GameMaster.getInstance().tryLogin(username, team, this);
                         } catch (Exception ex) {
                             ok = false;
                         }
